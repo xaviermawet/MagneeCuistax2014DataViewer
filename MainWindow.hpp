@@ -37,6 +37,40 @@ class MainWindow : public QMainWindow
 
     protected:
 
+        /*!
+         * \brief centerOnScreen : center the MainWindow
+         */
+        void centerOnScreen(void);
+
+        /*!
+         * \brief readSettings : restore all previous MainWindow settings
+         */
+        void readSettings(void);
+
+        /*!
+         * \brief writeSettings : save all current MainWindow settings
+         */
+        void writeSettings(void) const;
+
+        /*!
+         * \brief readLayoutSettings : restore previous MainWindow layout settings
+         * \param settingsGroup : name of the goup for layout settings
+         */
+        void readLayoutSettings(const QString& settingsGroup);
+
+        /*!
+         * \brief writeLayoutSettings : save current MainWindow layout settings
+         * \param settingsGroup : name of the goup for layout settings
+         */
+        void writeLayoutSettings(const QString& settingsGroup) const;
+
+        /*!
+         * \brief closeEvent : overloaded method for writing settings
+         */
+        virtual void closeEvent(QCloseEvent* event);
+
+    protected:
+
         Ui::MainWindow* ui;
 };
 
