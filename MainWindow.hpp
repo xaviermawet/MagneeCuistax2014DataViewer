@@ -9,7 +9,9 @@
     #include <QtGui>
 #endif
 
-#define QSETTINGS_MAINWINDOW_KEYWORD "MagneeCuistax2014DataViewer_MainWindow"
+#include "DataBase/DataBaseManager.hpp"
+
+#define QSETTINGS_MAINWINDOW_KEYWORD "MainWindow"
 
 namespace Ui {
     class MainWindow;
@@ -68,6 +70,11 @@ class MainWindow : public QMainWindow
          * \brief closeEvent : overloaded method for writing settings
          */
         virtual void closeEvent(QCloseEvent* event);
+
+    private slots:
+
+        // File Menu
+        void on_actionQuit_triggered(void);
 
     protected:
 

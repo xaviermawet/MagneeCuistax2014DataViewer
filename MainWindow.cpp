@@ -4,11 +4,35 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    /* The value is used by the QSettings class when it is constructed using
+     * the empty constructor. This saves having to repeat this information each
+     * time a QSettings object is created.
+     */
+    QCoreApplication::setOrganizationName("N4k1m");
+    QCoreApplication::setApplicationName("MagneeCuistax2014DataViewer");
+
+    // Encoding configuration
+    #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    #endif
+
     // GUI Configuration
     this->ui->setupUi(this);
 
-    // Restore previous MainWindows layout settings
+    // Restore previous MainWindow layout settings
     this->readSettings();
+
+    // Connect to previous database if exists
+    if (DataBaseManager::restorePreviousDataBase())
+    {
+        // Display project file path in the main window title
+        QFileInfo dbFile(QSqlDatabase::database().databaseName());
+        this->setWindowTitle(tr("Cuistax Data Viewer - ") + dbFile.baseName());
+
+        this->ui->statusBar->showMessage(
+                    tr("Latest project automatically loaded"), 4000);
+    }
 }
 
 MainWindow::~MainWindow(void)
@@ -77,4 +101,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
     this->writeSettings();
 
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::on_actionQuit_triggered(void)
+{
+    // Save the state of the MainWindow and its widgets
+    this->writeSettings();
+
+    qApp->quit();
 }
