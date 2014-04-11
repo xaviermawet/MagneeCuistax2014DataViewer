@@ -3,7 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
-    _comboBoxRaceList(NULL), _currentRaceID(-1)
+    _comboBoxRaceList(NULL), _modelRaceList(NULL), _currentRaceID(-1)
 {
     /* The value is used by the QSettings class when it is constructed using
      * the empty constructor. This saves having to repeat this information each
@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect to previous database if exists
     if (DataBaseManager::restorePreviousDataBase())
     {
+        // Create model(s)
+        this->createModelRaceList();
+
         // Display project file path in the main window title
         QFileInfo dbFile(QSqlDatabase::database().databaseName());
         this->setWindowTitle(tr("Cuistax Data Viewer - ") + dbFile.baseName());
@@ -42,6 +45,9 @@ MainWindow::~MainWindow(void)
     // Widgets
     delete this->ui;
     delete this->_comboBoxRaceList;
+
+    // Models
+    delete this->_modelRaceList;
 }
 
 void MainWindow::createToolBar(void)
@@ -66,6 +72,29 @@ void MainWindow::createToolBar(void)
     // Update the current race id
     connect(this->_comboBoxRaceList, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentRaceChanged(int)));
+}
+
+void MainWindow::createModelRaceList(void)
+{
+    // Stop if the comboBox (container) doesn't exist
+    if (!this->_comboBoxRaceList)
+        return;
+
+    if (this->_modelRaceList != NULL)
+        delete this->_modelRaceList;
+
+    // Create model
+    this->_modelRaceList = new NSqlQueryModel(this);
+
+    // Apply the new model to the comboBobx
+    this->_comboBoxRaceList->setModel(this->_modelRaceList);
+
+    // Populate the model
+    this->_modelRaceList->setQuery("SELECT name, id FROM RACE");
+
+    #if (QT_VERSION > QT_VERSION_CHECK(5, 0, 0))
+    this->_comboBoxRaceList->setCurrentIndex(0);
+    #endif
 }
 
 void MainWindow::centerOnScreen(void)
@@ -138,7 +167,8 @@ bool MainWindow::updateDataBase(const QString &dbFilePath,
      *                 Delete all sql models based on table(s)                *
      * ---------------------------------------------------------------------- */
 
-    // TODO
+    delete this->_modelRaceList;
+    this->_modelRaceList = NULL;
 
     /* ---------------------------------------------------------------------- *
      *                           Action on data base                          *
@@ -157,7 +187,7 @@ bool MainWindow::updateDataBase(const QString &dbFilePath,
     this->setWindowTitle(tr("Cuistax Data Viewer - ") + dbFile.baseName());
 
     // Create models based on the database
-    // TODO
+    this->createModelRaceList();
 
     return true;
 }
@@ -202,7 +232,8 @@ void MainWindow::currentRaceChanged(int currentRaceComboBoxIndex)
     if (currentRaceComboBoxIndex < 0) // No row selected in the comboBox
         return;
 
-    // TODO
+    this->_currentRaceID = this->_modelRaceList->index(
+                currentRaceComboBoxIndex, 1).data().toInt();
 
     qDebug() << "Mise à jour du race id" << this->_currentRaceID;
 }

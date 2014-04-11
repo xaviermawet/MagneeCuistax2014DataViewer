@@ -10,6 +10,7 @@
 #endif
 
 #include "DataBase/DataBaseManager.hpp"
+#include "DataBase/NSqlQueryModel.hpp"
 
 #define QSETTINGS_MAINWINDOW_KEYWORD "MainWindow"
 
@@ -43,6 +44,11 @@ class MainWindow : public QMainWindow
          * \brief createToolBar : create all the mainToolBar widgets
          */
         void createToolBar(void);
+
+        /*!
+         * \brief createModelRaceList : create a model based on RACE table
+         */
+        void createModelRaceList(void);
 
         /*!
          * \brief centerOnScreen : center the MainWindow
@@ -98,6 +104,9 @@ class MainWindow : public QMainWindow
         // Widgets
         Ui::MainWindow* ui;
         QComboBox* _comboBoxRaceList;
+
+        // Models
+        NSqlQueryModel* _modelRaceList;
 
         // Race
         int _currentRaceID;
