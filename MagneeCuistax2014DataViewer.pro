@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         MainWindow.cpp \
     Utils/NException.cpp \
-    DataBase/DataBaseManager.cpp
+    DataBase/DataBaseManager.cpp \
+    DataBase/NSqlQueryModel.cpp
 
 HEADERS  += MainWindow.hpp \
     Utils/NException.hpp \
-    DataBase/DataBaseManager.hpp
+    DataBase/DataBaseManager.hpp \
+    DataBase/NSqlQueryModel.hpp
 
 FORMS    += MainWindow.ui
 
