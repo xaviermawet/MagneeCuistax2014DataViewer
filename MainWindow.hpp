@@ -71,9 +71,18 @@ class MainWindow : public QMainWindow
          */
         virtual void closeEvent(QCloseEvent* event);
 
+        /*!
+         * \brief update all the models and widgets based on the database
+         * \param dbFilePath : path to the database file (project file)
+         * \return true if action succeed. Otherwise false.
+         */
+        bool updateDataBase(QString const& dbFilePath,
+                            bool(*dataBaseAction)(QString const&));
+
     private slots:
 
         // File Menu
+        void on_actionOpenProject_triggered(void);
         void on_actionQuit_triggered(void);
 
     protected:

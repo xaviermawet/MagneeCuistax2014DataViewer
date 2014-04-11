@@ -10,6 +10,9 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Cuistax Data Viewer</string>
+  </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -24,6 +27,8 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionOpenProject"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -43,6 +48,17 @@
    </property>
    <property name="toolTip">
     <string>Close Magnee Cuistax Data Viewer application</string>
+   </property>
+  </action>
+  <action name="actionOpenProject">
+   <property name="text">
+    <string>&amp;Open project</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an existing project file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

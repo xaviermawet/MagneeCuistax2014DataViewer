@@ -103,6 +103,64 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
+bool MainWindow::updateDataBase(const QString &dbFilePath,
+                                bool (*dataBaseAction)(const QString &))
+{
+    /* ---------------------------------------------------------------------- *
+     *                 Delete all sql models based on table(s)                *
+     * ---------------------------------------------------------------------- */
+
+    // TODO
+
+    /* ---------------------------------------------------------------------- *
+     *                           Action on data base                          *
+     * ---------------------------------------------------------------------- */
+    bool actionSucceed = (*dataBaseAction)(dbFilePath);
+
+    // Hide or show settings menu
+    // TODO
+
+    // if action failed. Nothing else to do. return false
+    if (!actionSucceed)
+        return false;
+
+    // Otherwise, display project file path in the main window title
+    QFileInfo dbFile(QSqlDatabase::database().databaseName());
+    this->setWindowTitle(tr("Cuistax Data Viewer - ") + dbFile.baseName());
+
+    // Create models based on the database
+    // TODO
+
+    return true;
+}
+
+void MainWindow::on_actionOpenProject_triggered(void)
+{
+    // Get existing project file path
+    QString dbFilePath = QFileDialog::getOpenFileName(
+                this, tr("Open project file"), QDir::homePath(),
+                tr("Projet Magnee Cuistax (*.db)"));
+
+    if (dbFilePath.isEmpty()) // User canceled (nothing to do)
+        return;
+
+    try
+    {
+        // Open the database
+        if (this->updateDataBase(dbFilePath, DataBaseManager::openExistingDataBase))
+            this->statusBar()->showMessage(
+                    tr("Project successfully opened"), 4000);
+        else
+            this->statusBar()->showMessage(
+                    tr("Error : project not opened"), 4000);
+    }
+    catch (NException const& exception)
+    {
+        QMessageBox::warning(this, tr("Enable to open project file"),
+                             exception.what());
+    }
+}
+
 void MainWindow::on_actionQuit_triggered(void)
 {
     // Save the state of the MainWindow and its widgets
