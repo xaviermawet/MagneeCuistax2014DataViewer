@@ -2,7 +2,8 @@
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow),
+    _comboBoxRaceList(NULL), _currentRaceID(-1)
 {
     /* The value is used by the QSettings class when it is constructed using
      * the empty constructor. This saves having to repeat this information each
@@ -19,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // GUI Configuration
     this->ui->setupUi(this);
+    this->createToolBar();
 
     // Restore previous MainWindow layout settings
     this->readSettings();
@@ -37,7 +39,33 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow(void)
 {
+    // Widgets
     delete this->ui;
+    delete this->_comboBoxRaceList;
+}
+
+void MainWindow::createToolBar(void)
+{
+    // Mainly developed with Qt Designer
+
+    /* ---------------------------------------------------------------------- *
+     *                           Race list combobox                           *
+     * ---------------------------------------------------------------------- */
+    if(this->_comboBoxRaceList != NULL)
+        delete this->_comboBoxRaceList;
+
+    // Create comboBox
+    this->_comboBoxRaceList = new QComboBox(this->ui->mainToolBar);
+    this->_comboBoxRaceList->setEditable(false);
+    this->_comboBoxRaceList->setSizePolicy(QSizePolicy::Expanding,
+                                           QSizePolicy::Maximum);
+
+    // Add the comboBox to the mainToolBar
+    this->ui->mainToolBar->addWidget(this->_comboBoxRaceList);
+
+    // Update the current race id
+    connect(this->_comboBoxRaceList, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(currentRaceChanged(int)));
 }
 
 void MainWindow::centerOnScreen(void)
@@ -167,4 +195,14 @@ void MainWindow::on_actionQuit_triggered(void)
     this->writeSettings();
 
     qApp->quit();
+}
+
+void MainWindow::currentRaceChanged(int currentRaceComboBoxIndex)
+{
+    if (currentRaceComboBoxIndex < 0) // No row selected in the comboBox
+        return;
+
+    // TODO
+
+    qDebug() << "Mise à jour du race id" << this->_currentRaceID;
 }

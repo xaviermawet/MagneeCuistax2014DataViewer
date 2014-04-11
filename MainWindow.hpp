@@ -40,6 +40,11 @@ class MainWindow : public QMainWindow
     protected:
 
         /*!
+         * \brief createToolBar : create all the mainToolBar widgets
+         */
+        void createToolBar(void);
+
+        /*!
          * \brief centerOnScreen : center the MainWindow
          */
         void centerOnScreen(void);
@@ -85,9 +90,17 @@ class MainWindow : public QMainWindow
         void on_actionOpenProject_triggered(void);
         void on_actionQuit_triggered(void);
 
+        // Race Management
+        void currentRaceChanged(int currentRaceComboBoxIndex);
+
     protected:
 
+        // Widgets
         Ui::MainWindow* ui;
+        QComboBox* _comboBoxRaceList;
+
+        // Race
+        int _currentRaceID;
 };
 
 #endif /* __MAINWINDOW_HPP__ */
